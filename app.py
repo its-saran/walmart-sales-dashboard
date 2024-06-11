@@ -6,6 +6,7 @@ remove_branding = """
 <style>
 #MainMenu {visibility: hidden;}
 .viewerBadge_container__r5tak {visibility: hidden;}
+.viewerBadge_link__qRIco {visibility: hidden;}
 </style>
 """
 
