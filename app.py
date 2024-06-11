@@ -7,6 +7,7 @@ remove_branding = """
 #MainMenu {visibility: hidden;}
 .viewerBadge_container__r5tak {visibility: hidden;}
 .viewerBadge_link__qRIco {visibility: hidden;}
+.st-emotion-cache-ch5dnh:first-child{ display: none; }
 </style>
 """
 
