@@ -5,6 +5,7 @@ import plotly.express as px
 remove_branding = """
 <style>
 #MainMenu {visibility: hidden;}
+.viewerBadge_container__r5tak {visibility: hidden;}
 </style>
 """
 
