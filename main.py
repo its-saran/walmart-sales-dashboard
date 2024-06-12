@@ -2,15 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-styles = """
-<style>
-#MainMenu {visibility: hidden;}
-.viewerBadge_container__r5tak {visibility: hidden;}
-.viewerBadge_link__qRIco {visibility: hidden;}
-.st-emotion-cache-ch5dnh:first-child{ display: none; }
-</style>
-"""
-
 class Dashboard:
     def __init__(self, path, current_month):
         self.df = pd.read_csv(path)
@@ -149,8 +140,6 @@ class Dashboard:
         fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
         return fig
 
-    def remove_branding(self, styles):
-        st.markdown(styles, unsafe_allow_html=True)
 
     def show(self):
         st.title('Walmart Sales Dashboard')
@@ -186,6 +175,5 @@ class Dashboard:
 
 if __name__ == '__main__':
     dashboard = Dashboard('dataset/WalmartSalesData.csv', 3)
-    dashboard.remove_branding(styles)
     dashboard.show()
 
