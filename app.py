@@ -403,9 +403,9 @@ if __name__ == '__main__':
 
     styles = f"""
     <style>
-    # header {{
-    #     visibility: hidden;
-    # }}
+    header {{
+        visibility: hidden;
+    }}
 
     .block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
         padding-bottom: 0px;
