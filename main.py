@@ -15,6 +15,10 @@ class Dashboard:
             'second': '#d84e4e',
             'third': '#890b57'
         }
+        self.size = {
+            'height': 346,
+            'width': 400
+        }
 
     def add_datetime_features(self, df):
         def categorize_time_of_day(hour):
@@ -50,14 +54,28 @@ class Dashboard:
 
         fig.update_traces(width=0.5)  # Set the width of the bars
         fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
+            bargap=0.4,
+            title=dict(
+                text='Total Sales by City',
+                font=dict(
+                    size=14
+                )
+            ),
+            xaxis=dict(
+                title=''  # Remove the x-axis title
+            ),
             legend=dict(
-                x=.8,  # Adjust the x position
+                x=0.83,  # Adjust the x position
                 y=1.2,  # Adjust the y position
                 xanchor='center',  # Anchor the legend to the center
-                yanchor='top'  # Anchor the legend to the top
+                yanchor='top',  # Anchor the legend to the top
+                title=dict(
+                    text=''  # Remove the legend title
+                )
             )
         )
         fig.update_yaxes(range=[30000, 40000], dtick=2000)
@@ -79,16 +97,26 @@ class Dashboard:
                      color_discrete_map=payment_colors,
                      barmode='group', title='Total Sales by Product Line')
         fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             yaxis=dict(range=[0, 18000]),
             legend=dict(
                 x=1,  # Position legend to the right
-                y=1,  # Position legend at the top
+                y=1.2,  # Position legend at the top
                 xanchor='right',  # Anchor the legend to the right side
-                yanchor='top'  # Anchor the legend to the top side
-            )
+                yanchor='top',  # Anchor the legend to the top
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Total Sales by Product Line',
+                font=dict(
+                    size=14
+                )
+            ),
         )
         return fig
 
@@ -102,22 +130,35 @@ class Dashboard:
         }
 
         fig = px.bar(avg_rating_per_city, x='TimeOfDay', y='Rating', color='City', barmode='stack',
-                     title='Average Rating per City by Time of Day', text='Rating',
+                     title='Average Rating per City', text='Rating',
                      color_discrete_map=color_map)
 
         fig.update_traces(texttemplate='%{text:.2f}', textposition='inside')
         fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
+            xaxis=dict(
+                title='Time of Day'  # Set the x-axis title text
+            ),
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             yaxis=dict(range=[0, 35]),  # Increase the y-axis range to 40
             bargap=0.4,  # Increase the gap between bars to decrease bar width
             legend=dict(
-                x=1,  # Position legend further to the right to avoid overlap
-                y=1,  # Position legend at the top
+                x=0.95,  # Position legend further to the right to avoid overlap
+                y=1.2,  # Position legend at the top
                 xanchor='right',  # Anchor the legend to the left side
-                yanchor='top'  # Anchor the legend to the top side
-            )
+                yanchor='top',  # Anchor the legend to the top
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Average Rating per City',
+                font=dict(
+                    size=14
+                )
+            ),
         )
 
         return fig
@@ -139,7 +180,8 @@ class Dashboard:
                       color_discrete_map={'Current Month': self.colors['first'],
                                           'Previous Month': self.colors['second']})
         fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             yaxis=dict(
@@ -151,8 +193,17 @@ class Dashboard:
                 x=1,
                 y=1,
                 xanchor='right',
-                yanchor='top'
-            )
+                yanchor='top',  # Anchor the legend to the top
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Daily Sales',
+                font=dict(
+                    size=14
+                )
+            ),
         )
         # fig.update_yaxes(range=[0, 000], dtick=3000)
         y_tickvals = [-3000, 0, 2000, 4000, 6000, 8000, 10000]
@@ -179,48 +230,13 @@ class Dashboard:
                                           'Previous Month': self.colors['third']})
 
         fig.update_layout(
-            xaxis_fixedrange=True,
-            yaxis_fixedrange=True,
-            height=400,
-            legend=dict(
-                x=0.99,
-                y=0.99,
-                xanchor='right',
-                yanchor='top',
-                traceorder='normal',
-                font=dict(
-                    size=12,
-                ),
-                bgcolor='rgba(0,0,0,0)',  # Transparent background
-            )
-        )
-
-        # Define tick values and labels for the y-axis
-        y_tickvals = [-200, -150, -100, -50, 0, 50, 100, 150, 200, 250, 300, 350, 400]
-        y_ticktext = ['', '', '', '', '0', '50', '100', '150', '200', '250', '300', '350', '400']
-
-        fig.update_yaxes(range=[-200, 400], tickvals=y_tickvals, ticktext=y_ticktext)
-        return fig
-
-    def plot_line_chart_3(self, df_current_month):
-        grouped_data = df_current_month.groupby(['Day', 'Customer type']).size().reset_index(name='Total Transactions')
-
-        fig = px.line(
-            grouped_data,
-            x='Day',
-            y='Total Transactions',
-            color='Customer type',
-            title='Total Transactions by Customer Type',
-            color_discrete_map={'Member': self.colors['first'], 'Normal': self.colors['third']}
-        )
-
-        fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             legend=dict(
                 x=0.99,
-                y=0.99,
+                y=1.1,
                 xanchor='right',
                 yanchor='top',
                 traceorder='normal',
@@ -228,12 +244,67 @@ class Dashboard:
                     size=12,
                 ),
                 bgcolor='rgba(0,0,0,0)',
-            )
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Quantities Sold',
+                font=dict(
+                    size=14
+                )
+            ),
+        )
+
+        # Define tick values and labels for the y-axis
+        y_tickvals = [-200, -150, -100, -50, 0, 50, 100, 150, 200, 250, 300, 350, 400]
+        y_ticktext = ['', '', '', '', '', '50', '', '150', '', '250', '', '350', '']
+
+        fig.update_yaxes(range=[-200, 400], tickvals=y_tickvals, ticktext=y_ticktext)
+        return fig
+
+    def plot_line_chart_3(self, df_current_month):
+        grouped_data = df_current_month.groupby(['Day', 'Customer type']).size().reset_index(name='Visits')
+
+        fig = px.line(
+            grouped_data,
+            x='Day',
+            y='Visits',
+            color='Customer type',
+            title='Daily Visits by Customer Type',
+            color_discrete_map={'Member': self.colors['first'], 'Normal': self.colors['third']}
+        )
+
+        fig.update_layout(
+            height=self.size['height'],
+            width=self.size['width'],
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            legend=dict(
+                x=0.99,
+                y=1.1,
+                xanchor='right',
+                yanchor='top',
+                traceorder='normal',
+                font=dict(
+                    size=12,
+                ),
+                bgcolor='rgba(0,0,0,0)',
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Daily Visits by Customer Type',
+                font=dict(
+                    size=14
+                )
+            ),
         )
 
         # fig.update_yaxes(range=[-10, 30], dtick=10, tickvals=[0, 10, 20, 30])
         y_tickvals = [-10, -5, 0, 5, 10, 15, 20, 25, 30]
-        y_ticktext = ['', '', '0', '5', '10', '15', '20', '25', '30']
+        y_ticktext = ['', '', '', '5', '10', '15', '20', '25', '30']
         fig.update_yaxes(range=[-10, 30], tickvals=y_tickvals, ticktext=y_ticktext)
         return fig
 
@@ -242,23 +313,34 @@ class Dashboard:
             {'Quantity': 'sum', 'Revenue': 'sum'}).reset_index()
 
         fig = px.scatter(daily_summary_current, x='Day', y='Quantity', size='Revenue', color='City',
-                         hover_name='City', size_max=20,
+                         hover_name='City', size_max=17,
                          title='Quantity Sold by city',
                          color_discrete_map={'Mandalay': self.colors['third'], 'Naypyitaw': self.colors['second'],
                                              'Yangon': self.colors['first']}
                          )
 
         fig.update_layout(
-            height=400,
+            height=self.size['height'],
+            width=self.size['width'],
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             legend=dict(
-                x=1,  # Position legend to the right
-                y=1,  # Position legend at the top
+                x=0.95,  # Position legend to the right
+                y=1.2,  # Position legend at the top
                 xanchor='right',  # Anchor the legend to the right side
-                yanchor='top'  # Anchor the legend to the top side
-            )
+                yanchor='top',  # Anchor the legend to the top side
+                title=dict(
+                    text=''  # Remove the legend title
+                )
+            ),
+            title=dict(
+                text='Quantity Sold by city',
+                font=dict(
+                    size=14
+                )
+            ),
         )
+        fig.update_yaxes(range=[0, 65])
         return fig
 
     def show(self):
@@ -314,16 +396,18 @@ if __name__ == '__main__':
     .block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
         padding-bottom: 0px;
         padding-top: 20px;
-        padding-right: 30px;
-        padding-left: 30px;
+        padding-right: 20px;
+        padding-left: 20px;
     }}
 
     #walmart-sales-dashboard {{
-        padding-bottom:0px;
+        padding-top: 0px;
+        padding-bottom:10px;
+        font-size:22px;
     }}
-
-    .st-emotion-cache-s9miia.e1f1d6gn2 {{
-        gap: 0;
+    
+    div[data-testid="stVerticalBlock"] {{
+        gap: 0rem;
     }}
     
     .viewerBadge_container__r5tak.styles_viewerBadge__CvC9N {{
