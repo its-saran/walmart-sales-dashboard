@@ -262,7 +262,10 @@ class Dashboard:
         return fig
 
     def show(self):
-        st.set_page_config(layout="wide")
+        st.set_page_config(
+            layout="wide",
+            page_title="Walmart Sales Dashboard",
+            page_icon="assets/walmart_logo.png")
 
         st.subheader('Walmart Sales Dashboard')
 
@@ -322,6 +325,15 @@ if __name__ == '__main__':
     .st-emotion-cache-s9miia.e1f1d6gn2 {{
         gap: 0;
     }}
+    
+    .viewerBadge_container__r5tak.styles_viewerBadge__CvC9N {{
+        z-index: -1;
+    }}
+    
+    .viewerBadge_link__qRIco {{
+        zindex: -1
+    }}
+    
     </style>
     """
 
