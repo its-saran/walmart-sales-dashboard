@@ -12,6 +12,10 @@ header {{
 .block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
     padding: 5px 5px 0px 5px;
 }}
+#MainMenu {{visibility: hidden;}}
+.viewerBadge_container__r5tak {{visibility: hidden;}}
+.viewerBadge_link__qRIco {{visibility: hidden;}}
+.st-emotion-cache-ch5dnh:first-child {{ display: none; }}
 </style>
 """
 

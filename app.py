@@ -2,14 +2,23 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-styles = """
+
+styles = f"""
 <style>
-#MainMenu {visibility: hidden;}
-.viewerBadge_container__r5tak {visibility: hidden;}
-.viewerBadge_link__qRIco {visibility: hidden;}
-.st-emotion-cache-ch5dnh:first-child{ display: none; }
+header {{
+    visibility: hidden;
+}}
+
+.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
+    padding: 5px 5px 0px 5px;
+}}
+#MainMenu {{visibility: hidden;}}
+.viewerBadge_container__r5tak {{visibility: hidden;}}
+.viewerBadge_link__qRIco {{visibility: hidden;}}
+.st-emotion-cache-ch5dnh:first-child {{ display: none; }}
 </style>
 """
+
 
 class Dashboard:
     def __init__(self, path, current_month):
@@ -18,6 +27,11 @@ class Dashboard:
         self.previous_month = current_month - 1
         self.df = self.add_datetime_features(self.df)
         self.df_current_month, self.df_previous_month = self.filter_by_month(self.df)
+        self.colors = {
+            'first': '#fc3231',
+            'second': '#fbc826',
+            'third': '#2181fc'
+        }
 
     def add_datetime_features(self, df):
         def categorize_time_of_day(hour):
@@ -43,8 +57,9 @@ class Dashboard:
 
     def plot_bar_chart_1(self, df_current_month):
         fig = px.bar(df_current_month, x='City', y='Revenue', title='Total Sales by City')
-        fig.update_traces(marker_color='#f17925')
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_traces(marker_color=self.colors['first'], width=0.5)
+        fig.update_layout(height=346, xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_yaxes(range=[30000, 38000], dtick=2000)
         return fig
 
     def plot_bar_chart_2(self, df_current_month):
@@ -52,28 +67,37 @@ class Dashboard:
             {'Revenue': 'sum'}).reset_index()
 
         payment_colors = {
-            'Cash': '#fc3132',
-            'Credit card': '#fbc926',
-            'Ewallet': '#2181fd'
+            'Cash': self.colors['first'],
+            'Credit card': self.colors['second'],
+            'Ewallet': self.colors['third']
         }
 
-        # Map payment method colors
         grouped_data['color'] = grouped_data['Payment method'].map(payment_colors)
 
         fig = px.bar(grouped_data, x='Product line', y='Revenue', color='Payment method',
                      color_discrete_map=payment_colors,
                      barmode='group', title='Total Sales by Product Line')
-
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_layout(
+            height=346,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            yaxis=dict(range=[0, 15000]),
+            legend=dict(
+                x=1,  # Position legend to the right
+                y=1,  # Position legend at the top
+                xanchor='right',  # Anchor the legend to the right side
+                yanchor='top'  # Anchor the legend to the top side
+            )
+        )
         return fig
 
     def plot_bar_chart_3(self, df_current_month):
         avg_rating_per_city = df_current_month.groupby(['TimeOfDay', 'City'])['Rating'].mean().reset_index()
 
         color_map = {
-            'Yangon': '#fc3132',
-            'Naypyitaw': '#fbc926',
-            'Mandalay': '#2181fd'
+            'Yangon': self.colors['first'],
+            'Naypyitaw': self.colors['second'],
+            'Mandalay': self.colors['third']
         }
 
         fig = px.bar(avg_rating_per_city, x='TimeOfDay', y='Rating', color='City', barmode='stack',
@@ -81,7 +105,19 @@ class Dashboard:
                      color_discrete_map=color_map)
 
         fig.update_traces(texttemplate='%{text:.2f}', textposition='inside')
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_layout(
+            height=346,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            yaxis=dict(range=[0, 35]),  # Increase the y-axis range to 40
+            bargap=0.4,  # Increase the gap between bars to decrease bar width
+            legend=dict(
+                x=1,  # Position legend further to the right to avoid overlap
+                y=1,  # Position legend at the top
+                xanchor='right',  # Anchor the legend to the left side
+                yanchor='top'  # Anchor the legend to the top side
+            )
+        )
 
         return fig
 
@@ -99,9 +135,28 @@ class Dashboard:
                       y='Revenue',
                       color='Month',
                       title='Daily Sales',
-                      color_discrete_map={'Current Month': '#FF9A00', 'Previous Month': '#FFFF80'})
+                      color_discrete_map={'Current Month': self.colors['first'], 'Previous Month': self.colors['second']})
+        fig.update_layout(
+            height=346,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            yaxis=dict(
+                tickformat=",",
+                title='Revenue',
+                rangemode='tozero'
+            ),
+            legend=dict(
+                x=1,
+                y=1,
+                xanchor='right',
+                yanchor='top'
+            )
+        )
+        # fig.update_yaxes(range=[0, 000], dtick=3000)
+        y_tickvals = [-3000, 0, 2000, 4000, 6000, 8000, 10000]
+        y_ticktext = ['', '0', '2000', '4000', '6000', '8000', '10000']
 
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_yaxes(range=[-2000, 10000], tickvals=y_tickvals, ticktext=y_ticktext)
         return fig
 
     def plot_line_chart_2(self, df_current_month, df_previous_month):
@@ -113,16 +168,35 @@ class Dashboard:
 
         combined_quantity = pd.concat([daily_quantity_current, daily_quantity_previous])
 
-        # st.write(combined_quantity)
-
         fig = px.line(combined_quantity,
                       x='Day',
                       y='Quantity',
                       color='Month',
                       title='Quantities Sold',
-                      color_discrete_map={'Current Month': '#2181fd', 'Previous Month': '#fc3132'})
+                      color_discrete_map={'Current Month': self.colors['first'], 'Previous Month': self.colors['second']})
 
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_layout(
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            height=346,
+            legend=dict(
+                x=0.99,
+                y=0.99,
+                xanchor='right',
+                yanchor='top',
+                traceorder='normal',
+                font=dict(
+                    size=12,
+                ),
+                bgcolor='rgba(0,0,0,0)',  # Transparent background
+            )
+        )
+
+        # Define tick values and labels for the y-axis
+        y_tickvals = [-200, -150, -100, -50, 0, 50, 100, 150, 200, 250, 300, 350, 400]
+        y_ticktext = ['', '', '', '', '0', '50', '100', '150', '200', '250', '300', '350', '400']
+
+        fig.update_yaxes(range=[-200, 400], tickvals=y_tickvals, ticktext=y_ticktext)
         return fig
 
     def plot_line_chart_3(self, df_current_month):
@@ -133,9 +207,31 @@ class Dashboard:
             x='Day',
             y='Total Transactions',
             color='Customer type',
-            title='Total Transactions by Customer Type')
+            title='Total Transactions by Customer Type',
+            color_discrete_map={'Member': self.colors['first'], 'Normal': self.colors['second']}
+        )
 
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_layout(
+            height=346,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            legend=dict(
+                x=0.99,
+                y=0.99,
+                xanchor='right',
+                yanchor='top',
+                traceorder='normal',
+                font=dict(
+                    size=12,
+                ),
+                bgcolor='rgba(0,0,0,0)',
+            )
+        )
+
+        # fig.update_yaxes(range=[-10, 30], dtick=10, tickvals=[0, 10, 20, 30])
+        y_tickvals = [-10, -5, 0, 5, 10, 15, 20, 25, 30]
+        y_ticktext = ['', '', '0', '5', '10', '15', '20', '25', '30']
+        fig.update_yaxes(range=[-10, 30], tickvals=y_tickvals, ticktext=y_ticktext)
         return fig
 
     def plot_bubble_chart_1(self, df_current_month):
@@ -144,48 +240,66 @@ class Dashboard:
 
         fig = px.scatter(daily_summary_current, x='Day', y='Quantity', size='Revenue', color='City',
                              hover_name='City', size_max=30,
-                             title='Quantity Sold by city')
+                             title='Quantity Sold by city',
+                         color_discrete_map={'Mandalay': self.colors['third'], 'Naypyitaw': self.colors['second'], 'Yangon': self.colors['first']}
+                         )
 
-        fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
+        fig.update_layout(
+            height=346,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            legend=dict(
+                x=1,  # Position legend to the right
+                y=1,  # Position legend at the top
+                xanchor='right',  # Anchor the legend to the right side
+                yanchor='top'  # Anchor the legend to the top side
+            )
+        )
         return fig
 
-    def remove_branding(self, styles):
-        st.markdown(styles, unsafe_allow_html=True)
 
     def show(self):
-        st.title('Walmart Sales Dashboard')
+        st.set_page_config(layout="wide")
 
-        bar_chart_1 = self.plot_bar_chart_1(self.df_current_month)
-        st.plotly_chart(bar_chart_1, use_container_width=True, config={'displayModeBar': False})
-
-
-        bubble_chart_1 = self.plot_bubble_chart_1(self.df_current_month)
-        st.plotly_chart(bubble_chart_1, use_container_width=True, config={'displayModeBar': False})
+        # st.subheader('Walmart Sales Dashboard')
 
 
-        bar_chart_2 = self.plot_bar_chart_2(self.df_current_month)
-        st.plotly_chart(bar_chart_2, use_container_width=True, config={'displayModeBar': False})
+        with st.container():
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                bar_chart_1 = self.plot_bar_chart_1(self.df_current_month)
+                st.plotly_chart(bar_chart_1, use_container_width=True, config={'displayModeBar': False})
+            with col2:
+                bubble_chart_1 = self.plot_bubble_chart_1(self.df_current_month)
+                st.plotly_chart(bubble_chart_1, use_container_width=True, config={'displayModeBar': False})
 
+            with col3:
+                line_chart_2 = self.plot_line_chart_2(self.df_current_month, self.df_previous_month)
+                st.plotly_chart(line_chart_2, use_container_width=True, config={'displayModeBar': False})
 
-        bar_chart_3 = self.plot_bar_chart_3(self.df_current_month)
-        st.plotly_chart(bar_chart_3, use_container_width=True, config={'displayModeBar': False})
+        with st.container():
+            col4, col5, col6 = st.columns(3)
 
+            with col4:
+                bar_chart_3 = self.plot_bar_chart_3(self.df_current_month)
+                st.plotly_chart(bar_chart_3, use_container_width=True, config={'displayModeBar': False})
 
-        line_chart_1 = self.plot_line_chart_1(self.df_current_month, self.df_previous_month)
-        st.plotly_chart(line_chart_1, use_container_width=True, config={'displayModeBar': False})
+            with col5:
+                bar_chart_2 = self.plot_bar_chart_2(self.df_current_month)
+                st.plotly_chart(bar_chart_2, use_container_width=True, config={'displayModeBar': False})
 
+            with col6:
+                line_chart_3 = self.plot_line_chart_3(self.df_current_month)
+                st.plotly_chart(line_chart_3, use_container_width=True, config={'displayModeBar': False})
 
-        line_chart_2 = self.plot_line_chart_2(self.df_current_month, self.df_previous_month)
-        st.plotly_chart(line_chart_2, use_container_width=True, config={'displayModeBar': False})
-
-
-        line_chart_3 = self.plot_line_chart_3(self.df_current_month)
-        st.plotly_chart(line_chart_3, use_container_width=True, config={'displayModeBar': False})
-
+                # line_chart_1 = self.plot_line_chart_1(self.df_current_month, self.df_previous_month)
+                # st.plotly_chart(line_chart_1, use_container_width=True, config={'displayModeBar': False})
 
 
 if __name__ == '__main__':
     dashboard = Dashboard('dataset/WalmartSalesData.csv', 3)
-    dashboard.remove_branding(styles)
     dashboard.show()
+    st.markdown(styles, unsafe_allow_html=True)
+
+
 
