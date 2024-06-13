@@ -4,7 +4,7 @@ import plotly.express as px
 
 
 class Dashboard:
-    def __init__(self, path, current_month):
+    def __init__(self, path):
         self.df = pd.read_csv(path)
         self.df = self.add_datetime_features(self.df)
         self.january, self.february, self.march = 1, 2, 3
@@ -398,7 +398,7 @@ class Dashboard:
 
 
 if __name__ == '__main__':
-    dashboard = Dashboard('dataset/WalmartSalesData.csv', 3)
+    dashboard = Dashboard('dataset/WalmartSalesData.csv')
     dashboard.show()
 
     styles = f"""
