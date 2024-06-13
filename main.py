@@ -6,10 +6,9 @@ import plotly.express as px
 class Dashboard:
     def __init__(self, path, current_month):
         self.df = pd.read_csv(path)
-        self.current_month = current_month
-        self.previous_month = current_month - 1
         self.df = self.add_datetime_features(self.df)
-        self.df_current_month, self.df_previous_month = self.filter_by_month(self.df)
+        self.january, self.february, self.march = 1, 2, 3
+        self.df_january, self.df_february, self.df_march = self.filter_by_month(self.df)
         self.colors = {
             'first': '#ef892c',
             'second': '#d84e4e',
@@ -38,9 +37,10 @@ class Dashboard:
         return df
 
     def filter_by_month(self, df):
-        df_current_month = df[df['Month'] == self.current_month]
-        df_previous_month = df[df['Month'] == self.previous_month]
-        return df_current_month, df_previous_month
+        df_january = df[df['Month'] == self.january]
+        df_february = df[df['Month'] == self.february]
+        df_march = df[df['Month'] == self.march]
+        return df_january, df_february, df_march
 
     def plot_bar_chart_1(self, df_current_month):
         city_color = {
@@ -347,36 +347,50 @@ class Dashboard:
         st.set_page_config(
             layout="wide",
             page_title="Walmart Sales Dashboard",
-            page_icon="assets/walmart_logo.png")
+            page_icon="assets/walmart_logo.png",
+            initial_sidebar_state="collapsed"
+        )
+        st.sidebar.header('Select a month')
+        option = st.sidebar.selectbox(
+            ' ',
+            ('March', 'February')
+        )
 
-        st.subheader('Walmart Sales Dashboard')
+        st.subheader(f'{option}')
+
+        if option == 'March':
+            df_current_month = self.df_march
+            df_previous_month = self.df_february
+        elif option == 'February':
+            df_current_month = self.df_february
+            df_previous_month = self.df_january
 
         with st.container():
             col1, col2, col3 = st.columns(3)
             with col1:
-                bar_chart_1 = self.plot_bar_chart_1(self.df_current_month)
+                bar_chart_1 = self.plot_bar_chart_1(df_current_month)
                 st.plotly_chart(bar_chart_1, use_container_width=True, config={'displayModeBar': False})
             with col2:
-                bubble_chart_1 = self.plot_bubble_chart_1(self.df_current_month)
+                bubble_chart_1 = self.plot_bubble_chart_1(df_current_month)
                 st.plotly_chart(bubble_chart_1, use_container_width=True, config={'displayModeBar': False})
 
             with col3:
-                line_chart_2 = self.plot_line_chart_2(self.df_current_month, self.df_previous_month)
+                line_chart_2 = self.plot_line_chart_2(df_current_month, df_previous_month)
                 st.plotly_chart(line_chart_2, use_container_width=True, config={'displayModeBar': False})
 
         with st.container():
             col4, col5, col6 = st.columns(3)
 
             with col4:
-                bar_chart_2 = self.plot_bar_chart_2(self.df_current_month)
+                bar_chart_2 = self.plot_bar_chart_2(df_current_month)
                 st.plotly_chart(bar_chart_2, use_container_width=True, config={'displayModeBar': False})
 
             with col5:
-                bar_chart_3 = self.plot_bar_chart_3(self.df_current_month)
+                bar_chart_3 = self.plot_bar_chart_3(df_current_month)
                 st.plotly_chart(bar_chart_3, use_container_width=True, config={'displayModeBar': False})
 
             with col6:
-                line_chart_3 = self.plot_line_chart_3(self.df_current_month)
+                line_chart_3 = self.plot_line_chart_3(df_current_month)
                 st.plotly_chart(line_chart_3, use_container_width=True, config={'displayModeBar': False})
 
                 # line_chart_1 = self.plot_line_chart_1(self.df_current_month, self.df_previous_month)
@@ -396,31 +410,40 @@ if __name__ == '__main__':
     .block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
         padding-bottom: 0px;
         padding-top: 20px;
-        padding-right: 20px;
-        padding-left: 20px;
+        padding-right: 25px;
+        padding-left: 30px;
     }}
 
-    #walmart-sales-dashboard {{
+    #walmart-sales-dashboard-march, #walmart-sales-dashboard-february {{
         padding-top: 0px;
-        padding-bottom:10px;
+        padding-left: 40px;
         font-size:22px;
+        padding-bottom:13px;
+        color: #ef892c;
     }}
-    
+
+    #march, #february {{
+        padding-top: 0px;
+        padding-left: 40px;
+        font-size:22px;
+        padding-bottom:13px;
+        color: #ef892c;
+    }}
+
+
     div[data-testid="stVerticalBlock"] {{
         gap: 0rem;
     }}
-    
+
     .viewerBadge_container__r5tak.styles_viewerBadge__CvC9N {{
         z-index: -1;
     }}
-    
+
     .viewerBadge_link__qRIco {{
         zindex: -1
     }}
-    
+
     </style>
     """
 
     st.markdown(styles, unsafe_allow_html=True)
-
-
