@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load data
-df1 = pd.read_csv('../dataset/WalmartSalesData.csv')
+df1 = pd.read_csv('dataset/WalmartSalesData.csv')
 
 # Combine 'Date' and 'Time' columns into a single 'DateTime' column
 df1['DateTime'] = pd.to_datetime(df1['Date'] + ' ' + df1['Time'], format='%d-%m-%Y %H:%M:%S')
