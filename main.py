@@ -3,23 +3,6 @@ import pandas as pd
 import plotly.express as px
 
 
-styles = f"""
-<style>
-header {{
-    visibility: hidden;
-}}
-
-.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
-    padding: 5px 5px 0px 5px;
-}}
-#MainMenu {{visibility: hidden;}}
-.viewerBadge_container__r5tak {{visibility: hidden;}}
-.viewerBadge_link__qRIco {{visibility: hidden;}}
-.st-emotion-cache-ch5dnh:first-child {{ display: none; }}
-</style>
-"""
-
-
 class Dashboard:
     def __init__(self, path, current_month):
         self.df = pd.read_csv(path)
@@ -28,9 +11,9 @@ class Dashboard:
         self.df = self.add_datetime_features(self.df)
         self.df_current_month, self.df_previous_month = self.filter_by_month(self.df)
         self.colors = {
-            'first': '#fc3231',
-            'second': '#fbc826',
-            'third': '#2181fc'
+            'first': '#ef892c',
+            'second': '#d84e4e',
+            'third': '#890b57'
         }
 
     def add_datetime_features(self, df):
@@ -56,10 +39,28 @@ class Dashboard:
         return df_current_month, df_previous_month
 
     def plot_bar_chart_1(self, df_current_month):
-        fig = px.bar(df_current_month, x='City', y='Revenue', title='Total Sales by City')
-        fig.update_traces(marker_color=self.colors['first'], width=0.5)
-        fig.update_layout(height=346, xaxis_fixedrange=True, yaxis_fixedrange=True)
-        fig.update_yaxes(range=[30000, 38000], dtick=2000)
+        city_color = {
+            'Yangon': self.colors['first'],
+            'Naypyitaw': self.colors['second'],
+            'Mandalay': self.colors['third']
+        }
+
+        fig = px.bar(df_current_month, x='City', y='Revenue', title='Total Sales by City', color='City',
+                     color_discrete_map=city_color)
+
+        fig.update_traces(width=0.5)  # Set the width of the bars
+        fig.update_layout(
+            height=400,
+            xaxis_fixedrange=True,
+            yaxis_fixedrange=True,
+            legend=dict(
+                x=.8,  # Adjust the x position
+                y=1.2,  # Adjust the y position
+                xanchor='center',  # Anchor the legend to the center
+                yanchor='top'  # Anchor the legend to the top
+            )
+        )
+        fig.update_yaxes(range=[30000, 40000], dtick=2000)
         return fig
 
     def plot_bar_chart_2(self, df_current_month):
@@ -78,10 +79,10 @@ class Dashboard:
                      color_discrete_map=payment_colors,
                      barmode='group', title='Total Sales by Product Line')
         fig.update_layout(
-            height=346,
+            height=400,
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
-            yaxis=dict(range=[0, 15000]),
+            yaxis=dict(range=[0, 18000]),
             legend=dict(
                 x=1,  # Position legend to the right
                 y=1,  # Position legend at the top
@@ -106,7 +107,7 @@ class Dashboard:
 
         fig.update_traces(texttemplate='%{text:.2f}', textposition='inside')
         fig.update_layout(
-            height=346,
+            height=400,
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             yaxis=dict(range=[0, 35]),  # Increase the y-axis range to 40
@@ -135,9 +136,10 @@ class Dashboard:
                       y='Revenue',
                       color='Month',
                       title='Daily Sales',
-                      color_discrete_map={'Current Month': self.colors['first'], 'Previous Month': self.colors['second']})
+                      color_discrete_map={'Current Month': self.colors['first'],
+                                          'Previous Month': self.colors['second']})
         fig.update_layout(
-            height=346,
+            height=400,
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             yaxis=dict(
@@ -173,12 +175,13 @@ class Dashboard:
                       y='Quantity',
                       color='Month',
                       title='Quantities Sold',
-                      color_discrete_map={'Current Month': self.colors['first'], 'Previous Month': self.colors['second']})
+                      color_discrete_map={'Current Month': self.colors['first'],
+                                          'Previous Month': self.colors['third']})
 
         fig.update_layout(
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
-            height=346,
+            height=400,
             legend=dict(
                 x=0.99,
                 y=0.99,
@@ -208,11 +211,11 @@ class Dashboard:
             y='Total Transactions',
             color='Customer type',
             title='Total Transactions by Customer Type',
-            color_discrete_map={'Member': self.colors['first'], 'Normal': self.colors['second']}
+            color_discrete_map={'Member': self.colors['first'], 'Normal': self.colors['third']}
         )
 
         fig.update_layout(
-            height=346,
+            height=400,
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             legend=dict(
@@ -239,13 +242,14 @@ class Dashboard:
             {'Quantity': 'sum', 'Revenue': 'sum'}).reset_index()
 
         fig = px.scatter(daily_summary_current, x='Day', y='Quantity', size='Revenue', color='City',
-                             hover_name='City', size_max=30,
-                             title='Quantity Sold by city',
-                         color_discrete_map={'Mandalay': self.colors['third'], 'Naypyitaw': self.colors['second'], 'Yangon': self.colors['first']}
+                         hover_name='City', size_max=20,
+                         title='Quantity Sold by city',
+                         color_discrete_map={'Mandalay': self.colors['third'], 'Naypyitaw': self.colors['second'],
+                                             'Yangon': self.colors['first']}
                          )
 
         fig.update_layout(
-            height=346,
+            height=400,
             xaxis_fixedrange=True,
             yaxis_fixedrange=True,
             legend=dict(
@@ -257,12 +261,10 @@ class Dashboard:
         )
         return fig
 
-
     def show(self):
         st.set_page_config(layout="wide")
 
-        # st.subheader('Walmart Sales Dashboard')
-
+        st.subheader('Walmart Sales Dashboard')
 
         with st.container():
             col1, col2, col3 = st.columns(3)
@@ -281,12 +283,12 @@ class Dashboard:
             col4, col5, col6 = st.columns(3)
 
             with col4:
-                bar_chart_3 = self.plot_bar_chart_3(self.df_current_month)
-                st.plotly_chart(bar_chart_3, use_container_width=True, config={'displayModeBar': False})
-
-            with col5:
                 bar_chart_2 = self.plot_bar_chart_2(self.df_current_month)
                 st.plotly_chart(bar_chart_2, use_container_width=True, config={'displayModeBar': False})
+
+            with col5:
+                bar_chart_3 = self.plot_bar_chart_3(self.df_current_month)
+                st.plotly_chart(bar_chart_3, use_container_width=True, config={'displayModeBar': False})
 
             with col6:
                 line_chart_3 = self.plot_line_chart_3(self.df_current_month)
@@ -299,7 +301,30 @@ class Dashboard:
 if __name__ == '__main__':
     dashboard = Dashboard('dataset/WalmartSalesData.csv', 3)
     dashboard.show()
-    st.markdown(styles, unsafe_allow_html=True)
 
+    styles = f"""
+    <style>
+    header {{
+        visibility: hidden;
+    }}
+
+    .block-container.st-emotion-cache-1jicfl2.ea3mdgi5 {{
+        padding-bottom: 0px;
+        padding-top: 20px;
+        padding-right: 30px;
+        padding-left: 30px;
+    }}
+
+    #walmart-sales-dashboard {{
+        padding-bottom:0px;
+    }}
+
+    .st-emotion-cache-s9miia.e1f1d6gn2 {{
+        gap: 0;
+    }}
+    </style>
+    """
+
+    st.markdown(styles, unsafe_allow_html=True)
 
 

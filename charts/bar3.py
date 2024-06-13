@@ -16,7 +16,7 @@ def categorize_time_of_day(hour):
 
 
 # Load data
-df = pd.read_csv('dataset/WalmartSalesData.csv')
+df = pd.read_csv('../dataset/WalmartSalesData.csv')
 
 
 # Combine 'Date' and 'Time' columns into a single 'DateTime' column
