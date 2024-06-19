@@ -10,6 +10,9 @@ This project provides a web-based dashboard for visualizing Walmart sales data u
 - Visualizations powered by Plotly for dynamic charts.
 - Data manipulation and analysis using Pandas.
 
+## Demo
+Check out the live demo [here](https://walmart-sales-dashboard.streamlit.app/).
+
 ## Installation
 1. Clone the repository:
    ```bash
