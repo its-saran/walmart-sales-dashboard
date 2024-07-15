@@ -1,4 +1,10 @@
 class Styles:
+    # ul[role = "option"]:nth - of - type(1),
+    # ul[role = "option"]:nth - of - type(3),
+    # ul[role = "option"]:nth - of - type(4)
+    # {{
+    #     display: None;
+    # }}
     @staticmethod
     def inject(st, config):
 
@@ -22,12 +28,6 @@ class Styles:
                 font-size:22px;
                 padding-bottom:13px;
                 color: {config['app']['colors']['first']}
-            }}
-            
-            ul[role="option"]:nth-of-type(1), 
-            ul[role="option"]:nth-of-type(3),
-            ul[role="option"]:nth-of-type(4){{
-                display: None;
             }}
             
             ul div[data-testid="main-menu-divider"] {{
