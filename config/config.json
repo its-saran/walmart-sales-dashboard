@@ -2,9 +2,21 @@
   "app": {
     "theme": "dark",
     "colors": {
+      "Volcano": {
         "first": "#ef892c",
         "second": "#d84e4e",
         "third": "#890b57"
+      },
+      "Strawberry": {
+        "first": "#f70848",
+        "second": "#f43265",
+        "third": "#f75f85"
+      },
+      "Ocean": {
+        "first": "#1795cc",
+        "second": "#0f79a7",
+        "third": "#1db5d0"
+      }
     }
   },
   "plotly": {

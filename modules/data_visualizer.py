@@ -4,14 +4,13 @@ import plotly.express as px
 class Visualize:
     def __init__(self, config):
         self.config = config
-        self.colors = self.config['app']['colors']
         self.size = self.config['plotly']['chart_size']
 
-    def chart_1(self, df_current_month):
+    def chart_1(self, df_current_month, colors):
         color_map = {
-            'Yangon': self.colors['first'],
-            'Naypyitaw': self.colors['second'],
-            'Mandalay': self.colors['third']
+            'Yangon': colors['first'],
+            'Naypyitaw': colors['second'],
+            'Mandalay': colors['third']
         }
 
         fig = px.bar(df_current_month, x='City', y='Revenue', title='Total Sales by City', color='City',
@@ -40,11 +39,11 @@ class Visualize:
         fig.update_yaxes(range=[30000, 40000], dtick=2000)
         return fig
 
-    def chart_2(self, df_current_month):
+    def chart_2(self, df_current_month, colors):
         color_map = {
-            'Mandalay': self.colors['third'],
-            'Naypyitaw': self.colors['second'],
-            'Yangon': self.colors['first']
+            'Mandalay': colors['third'],
+            'Naypyitaw': colors['second'],
+            'Yangon': colors['first']
         }
 
         fig = px.scatter(df_current_month, x='Day', y='Quantity', size='Revenue', color='City',
@@ -73,10 +72,10 @@ class Visualize:
         fig.update_yaxes(range=[0, 65])
         return fig
 
-    def chart_3(self, combined_df):
+    def chart_3(self, combined_df, colors):
         color_map = {
-            'Current Month': self.colors['first'],
-            'Previous Month': self.colors['third']
+            'Current Month': colors['first'],
+            'Previous Month': colors['third']
         }
 
         fig = px.line(combined_df,
@@ -113,11 +112,11 @@ class Visualize:
         fig.update_yaxes(range=[-200, 400], tickvals=y_tickvals, ticktext=y_ticktext)
         return fig
 
-    def chart_4(self, df_current_month):
+    def chart_4(self, df_current_month, colors):
         color_map = {
-            'Cash': self.colors['first'],
-            'Credit card': self.colors['second'],
-            'Ewallet': self.colors['third']
+            'Cash': colors['first'],
+            'Credit card': colors['second'],
+            'Ewallet': colors['third']
         }
 
         fig = px.bar(df_current_month, x='Product line', y='Revenue', color='Payment method',
@@ -143,11 +142,11 @@ class Visualize:
         )
         return fig
 
-    def chart_5(self, df_current_month):
+    def chart_5(self, df_current_month, colors):
         color_map = {
-            'Yangon': self.colors['first'],
-            'Naypyitaw': self.colors['second'],
-            'Mandalay': self.colors['third']
+            'Yangon': colors['first'],
+            'Naypyitaw': colors['second'],
+            'Mandalay': colors['third']
         }
 
         fig = px.bar(df_current_month, x='TimeOfDay', y='Rating', color='City', barmode='stack',
@@ -178,10 +177,10 @@ class Visualize:
 
         return fig
 
-    def chart_6(self, df_current_month):
+    def chart_6(self, df_current_month, colors):
         color_map = {
-            'Member': self.colors['first'],
-            'Normal': self.colors['third']
+            'Member': colors['first'],
+            'Normal': colors['third']
         }
 
         fig = px.line(

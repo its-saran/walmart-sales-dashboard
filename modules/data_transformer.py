@@ -4,7 +4,6 @@ import pandas as pd
 class Transform:
     def __init__(self, config):
         self.config = config
-        self.colors = self.config['app']['colors']
         self.df = pd.read_csv(self.config['data']['source'])
         self.df = self.add_datetime_features(self.df)
 
@@ -61,11 +60,11 @@ class Transform:
 
         return combined_data
 
-    def chart_4(self, df_current_month):
+    def chart_4(self, df_current_month, colors):
         color_map = {
-            'Cash': self.colors['first'],
-            'Credit card': self.colors['second'],
-            'Ewallet': self.colors['third']
+            'Cash': colors['first'],
+            'Credit card': colors['second'],
+            'Ewallet': colors['third']
         }
         grouped_data = df_current_month.groupby(['Product line', 'Payment method']).agg(
             {'Revenue': 'sum'}).reset_index()
