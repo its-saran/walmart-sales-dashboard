@@ -1,0 +1,26 @@
+{
+  "app": {
+    "theme": "dark",
+    "colors": {
+        "first": "#ef892c",
+        "second": "#d84e4e",
+        "third": "#890b57"
+    }
+  },
+  "plotly": {
+    "chart_size": {
+      "height": 346,
+      "width": 400
+    }
+
+  },
+  "data": {
+    "source": "dataset/WalmartSalesData.csv"
+  },
+  "page": {
+     "layout":"wide",
+     "title":"Walmart Sales Dashboard",
+     "icon":"assets/walmart_logo.png",
+     "sidebar":"collapsed"
+  }
+}
